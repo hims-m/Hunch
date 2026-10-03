@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hunch</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="card">
+    <h1>🔮 Hunch</h1>
+
+    {% if stage == "start" %}
+      <p>Think of a character from Percy Jackson & the Olympians. I'll try to guess who it is.</p>
+      <a class="btn primary" href="{{ url_for('play') }}">Start</a>
+
+    {% elif stage == "question" %}
+      <p class="muted">Question {{ number }}</p>
+      <h2>{{ question }}</h2>
+      <form method="post" action="{{ url_for('answer') }}" class="answers">
+        <input type="hidden" name="qid" value="{{ qid }}">
+        <button name="response" value="yes">Yes</button>
+        <button name="response" value="no">No</button>
+        <button name="response" value="probably">Probably</button>
+        <button name="response" value="probably_not">Probably not</button>
+        <button name="response" value="dont_know">Don't know</button>
+      </form>
+
+    {% elif stage == "guess" %}
+      <p>I think you're thinking of…</p>
+      <h2 class="guess">{{ name }}</h2>
+      <p class="muted">{{ confidence }}% confident</p>
+      <form method="post" action="{{ url_for('result') }}" class="answers">
+        <button name="correct" value="yes" class="primary">Yes, that's right!</button>
+        <button name="correct" value="no">No</button>
+      </form>
+
+    {% elif stage == "teach" %}
+      <p>You beat me! Who were you thinking of?</p>
+      <form method="post" action="{{ url_for('teach') }}" class="teach">
+        <input type="text" name="name" placeholder="Character name" required autofocus>
+        <button class="primary">Teach me</button>
+      </form>
+
+    {% elif stage == "win" %}
+      <h2>Got it! 🎉</h2>
+      <p>I've updated my knowledge from this game.</p>
+      <a class="btn primary" href="{{ url_for('index') }}">Play again</a>
+
+    {% elif stage == "learned" %}
+      <h2>Thanks!</h2>
+      <p>I'll remember <strong>{{ name }}</strong> next time.</p>
+      <a class="btn primary" href="{{ url_for('index') }}">Play again</a>
+    {% endif %}
+  </main>
+</body>
+</html>
